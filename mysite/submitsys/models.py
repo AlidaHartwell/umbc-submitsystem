@@ -2,8 +2,11 @@ from django.db import models
 
 
 # Create your models here.
+
+
 class Assignment(models.Model):
     assignment_name = models.CharField(max_length=15, default='HW0')
+    point_value = models.IntegerField()
 
 
 class Student(models.Model):
@@ -17,6 +20,7 @@ class Student(models.Model):
 class Submission(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=15)
+    assignment_fk = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     mongo_db = models.CharField(max_length=512, default="NULL")
 
     def __str__(self):
