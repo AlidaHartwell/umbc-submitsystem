@@ -5,6 +5,11 @@
     <title>The assignment console</title>
 </head>
 <body>
+<ul>
+    {% for assignment in assignments %}
+    <li>{{assignment.assignment_name}}</li>
+    {% endfor %}
+</ul>
 <form action="{% url 'assignment_create' %}" method="post">
     {% csrf_token %}
     <input type="textarea" name="assignmentName" value=""/>
