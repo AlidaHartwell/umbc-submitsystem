@@ -1,12 +1,19 @@
 from django.http import HttpResponse
 from django.template import loader
 
-from .models import Assignment
+from .models import Assignment, Course
 
 
 def index(request):
     return HttpResponse("Welcome to the UMBC CMSC Submit System!")
 
+
+def course_console(request):
+    context = {
+        "courses" : Course.objects.all(),
+    }
+    template = loader.get_template('submitsys/assignment.html')
+    return HttpResponse(template.render(context, request))
 
 def assignment_console(request):
     context = {
