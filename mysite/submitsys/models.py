@@ -2,10 +2,13 @@ from django.db import models
 
 
 # Create your models here.
+class Course(models.Model):
+    course_name = models.CharField(max_length=8, default='CMSC 201')
 
 
 class Assignment(models.Model):
     assignment_name = models.CharField(max_length=15, default='HW0')
+    course_fk = models.ForeignKey(Course, on_delete=models.CASCADE)
     point_value = models.IntegerField()
 
 
@@ -25,3 +28,4 @@ class Submission(models.Model):
 
     def __str__(self):
         return self.file_name
+
