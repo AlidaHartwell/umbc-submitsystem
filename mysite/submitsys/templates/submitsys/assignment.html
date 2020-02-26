@@ -7,7 +7,7 @@
 <body>
 <ul>
     {% for assignment in assignments %}
-    <li>{{assignment.assignment_name}}</li>
+    <li><a href="{% url 'assignment_details' %}">{{assignment.assignment_name}}</a></li>
     {% endfor %}
 </ul>
 <form action="{% url 'assignment_create' %}" method="post">
