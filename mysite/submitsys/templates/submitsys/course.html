@@ -5,5 +5,16 @@
     <title>The course console</title>
 </head>
 <body>
+<ul>
+    The following courses are registered in the system:
+    {% for course in courses %}
+    <li>{{course.course_name}}</li>
+    {% endfor %}
+</ul>
+<form action="{% url 'course_create' %}" method="post">
+    {% csrf_token %}
+    <input type="textarea" name="courseName" value=""/>
+    <input type="submit" value="Submit"/>
+</form>
 </body>
 </html>

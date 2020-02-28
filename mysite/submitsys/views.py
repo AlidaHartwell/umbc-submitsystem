@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse
 
 from .models import Assignment, Course
 
@@ -10,14 +11,21 @@ def index(request):
 
 def course_console(request):
     context = {
-        "courses" : Course.objects.all(),
+        "courses": Course.objects.all(),
     }
-    template = loader.get_template('submitsys/assignment.html')
+    template = loader.get_template('submitsys/course.html')
     return HttpResponse(template.render(context, request))
+
+
+def course_create(request):
+    course = Course.objects.create(course_name=request.POST['courseName'])
+    course.save()
+    return HttpResponse("we did it:  " + str(course.id))
+
 
 def assignment_console(request):
     context = {
-        "assignments" : Assignment.objects.all(),
+        "assignments": Assignment.objects.all(),
     }
     template = loader.get_template('submitsys/assignment.html')
     return HttpResponse(template.render(context, request))

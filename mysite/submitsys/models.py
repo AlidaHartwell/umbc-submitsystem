@@ -22,7 +22,7 @@ class Student(models.Model):
 
 class Submission(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    file_name = models.CharField(max_length=15)
+    file_name = models.CharField(max_length=15) # Directory of submissions
     assignment_fk = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     mongo_db = models.CharField(max_length=512, default="NULL")
 
