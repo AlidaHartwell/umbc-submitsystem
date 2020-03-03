@@ -10,7 +10,7 @@
     <li>{{assignment.assignment_name}}</li>
     {% endfor %}
 </ul>
-<form action="{% url 'assignment_create' %}" method="post">
+<form action="{% url 'assignment_create' course_id %}" method="post">
     {% csrf_token %}
     <input type="textarea" name="assignmentName" value=""/>
     <input type="submit" value="Submit"/>

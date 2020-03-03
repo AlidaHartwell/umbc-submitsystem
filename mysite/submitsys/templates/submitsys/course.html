@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>The course console</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <body>
-<ul>
+<div class="container">
     The following courses are registered in the system:
-    {% for course in courses %}
-    <li>{{course.course_name}}</li>
-    {% endfor %}
-</ul>
-<form action="{% url 'course_create' %}" method="post">
-    {% csrf_token %}
-    <input type="textarea" name="courseName" value=""/>
-    <input type="submit" value="Submit"/>
-</form>
+    <div class="list-group">
+        {% for course in courses %}
+        <a href="{% url 'assignment_console' course.id %}" class="list-group-item list-group-item-action">{{course.course_name}}</a>
+        {% endfor %}
+    </div>
+</div>
+<div class="container">
+<hr/>
+    <form action="{% url 'course_create' %}" method="post">
+        <div class="form-group">
+            {% csrf_token %}
+            <input type="textarea" class='form-control' name="courseName" placeholder="Enter new course name" value=""/>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

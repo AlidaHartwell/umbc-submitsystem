@@ -20,21 +20,24 @@ def course_console(request):
 def course_create(request):
     course = Course.objects.create(course_name=request.POST['courseName'])
     course.save()
-    return HttpResponse("we did it:  " + str(course.id))
+    return HttpResponseRedirect(reverse('course_console'))
 
 
-def assignment_console(request):
+def assignment_console(request, course_id):
     context = {
         "assignments": Assignment.objects.all(),
+        "course_id": course_id,
     }
     template = loader.get_template('submitsys/assignment.html')
     return HttpResponse(template.render(context, request))
 
 
-def assignment_create(request):
-    assignment = Assignment.objects.create(assignment_name=request.POST['assignmentName'], point_value=0)
+def assignment_create(request, course_id):
+    assignment = Assignment.objects.create(assignment_name=request.POST['assignmentName'],
+                                           course_fk=Course.objects.get(pk=course_id),
+                                           point_value=0)
     assignment.save()
-    return HttpResponse("we did it:  " + str(assignment.id))
+    return HttpResponseRedirect(reverse('assignment_console'))
 
 
 def detail(request, assignment_id):
