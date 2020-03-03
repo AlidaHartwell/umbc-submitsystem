@@ -13,9 +13,5 @@
     <li>{{assignment.assignment_name}}</li>
     {% endfor %}
 </ul>
-<form action="{% url 'assignment_create' course_id %}" method="post">
-    {% csrf_token %}
-    <button class="btn btn-primary" type="button" value="Create New Assignment">Submit</button>
-</form>
 </body>
 </html>

@@ -13,11 +13,11 @@ class Assignment(models.Model):
 
 
 class Student(models.Model):
-    student_id = models.CharField(max_length=7, default='NULL')
+    student_num = models.CharField(max_length=7, default='NULL')
     student_email = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.student_id
+        return self.student_num
 
 
 class Submission(models.Model):

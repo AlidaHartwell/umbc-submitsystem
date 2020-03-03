@@ -40,10 +40,21 @@ def assignment_create(request, course_id):
     return HttpResponseRedirect(reverse('assignment_console'))
 
 
+def assignment_form(request, course_id):  # Will be a form to input assignment name, pt vals, upload rubric
+    context = {
+        "assignments": Assignment.objects.all(),
+        "course_id": course_id,
+    }
+    return HttpResponse()
+
 def detail(request, assignment_id):
     return HttpResponse("You're looking at assignment %s." % assignment_id)
 
 
-def student(request, assignment_id):
-    response = "You're viewing the submission for assignment %s"
-    return HttpResponse(response % assignment_id)
+def student_console(request):
+    context = {
+        'courses': Course.objects.all()
+    }
+    template = loader.get_template('submitsys/student.html')
+    return HttpResponse(template.render(context.request))
+
