@@ -7,7 +7,8 @@ urlpatterns = [
     path('courses', views.course_console, name='course_console'),
     path('courses/create', views.course_create, name='course_create'),
     path('courses/<int:course_id>/assignments', views.assignment_console, name='assignment_console'),
-    path('courses/<int:course_id>/assignments/create', views.assignment_create, name='assignment_create'),
+    path('courses/<int:course_id>/assignments/redirect', views.assignment_create, name='assignment_create'),
+    path('courses/<int:course_id>/assignments/create', views.assignment_form, name='assignment_form'),
     path('<int:assignment_id>/', views.detail, name='detail'),
     path('<int:student_id>/', views.student_console, name='student_console'),
 ]

@@ -37,7 +37,7 @@ def assignment_create(request, course_id):
                                            course_fk=Course.objects.get(pk=course_id),
                                            point_value=0)
     assignment.save()
-    return HttpResponseRedirect(reverse('assignment_console'))
+    return HttpResponseRedirect(reverse('assignment_form'))
 
 
 def assignment_form(request, course_id):  # Will be a form to input assignment name, pt vals, upload rubric
@@ -45,7 +45,9 @@ def assignment_form(request, course_id):  # Will be a form to input assignment n
         "assignments": Assignment.objects.all(),
         "course_id": course_id,
     }
-    return HttpResponse()
+    template = loader.get_template('submitsys/assignment_form.html')
+    return HttpResponse(template.render(context, request))
+
 
 def detail(request, assignment_id):
     return HttpResponse("You're looking at assignment %s." % assignment_id)
