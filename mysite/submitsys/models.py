@@ -12,6 +12,23 @@ class Assignment(models.Model):
     point_value = models.IntegerField()
 
 
+class Rubric(models.Model):
+    assignment_fk = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    is_blank = models.BooleanField(default=True)
+
+
+class RubricSection(models.Model):
+    rubric_fk = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+    name = models.CharField(max_length=1000, default="General")
+
+
+class RubricItem(models.Model):
+    section_fk = models.ForeignKey(RubricSection, on_delete=models.CASCADE)
+    text = models.CharField(max_length=1000, default="")
+    possible_points = models.IntegerField()
+    is_optional = models.BooleanField()
+
+
 class Student(models.Model):
     student_num = models.CharField(max_length=7, default='NULL')
     student_email = models.CharField(max_length=30)

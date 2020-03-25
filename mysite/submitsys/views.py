@@ -33,11 +33,11 @@ def assignment_console(request, course_id):
 
 
 def assignment_create(request, course_id):
-    assignment = Assignment.objects.create(assignment_name=request.POST['assignmentName'],
+    assignment = Assignment.objects.create(assignment_name=request.POST['assignmentTitle'],
                                            course_fk=Course.objects.get(pk=course_id),
                                            point_value=0)
     assignment.save()
-    return HttpResponseRedirect(reverse('assignment_form'))
+    return HttpResponseRedirect(reverse('assignment_console', args=(course_id,)))
 
 
 def assignment_form(request, course_id):  # Will be a form to input assignment name, pt vals, upload rubric
