@@ -8,10 +8,13 @@
 
 </head>
 <body>
-<ul>
-    {% for assignment in assignments %}
-    <li>{{assignment.assignment_name}}</li>
-    {% endfor %}
-</ul>
+<div class="container">
+    The following courses are registered in the system:
+    <div class="list-group">
+        {% for course in courses %}
+        <a href="{% url 'student_courses' course.id %}" class="list-group-item list-group-item-action">{{course.course_name}}</a>
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>

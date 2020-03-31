@@ -25,8 +25,8 @@ def course_create(request):
 
 def assignment_console(request, course_id):
     context = {
-        "assignments": Assignment.objects.all(),
-        "course_id": course_id,
+        "assignments": Assignment.objects.all(),  # TODO: Get all assignments for course ID
+        "course_id": course_id,  # Get course object with course ID -> how do access model info from DB
     }
     template = loader.get_template('submitsys/assignment.html')
     return HttpResponse(template.render(context, request))
@@ -42,7 +42,6 @@ def assignment_create(request, course_id):
 
 def assignment_form(request, course_id):  # Will be a form to input assignment name, pt vals, upload rubric
     context = {
-        "assignments": Assignment.objects.all(),
         "course_id": course_id,
     }
     template = loader.get_template('submitsys/assignment_form.html')
@@ -53,10 +52,29 @@ def detail(request, assignment_id):
     return HttpResponse("You're looking at assignment %s." % assignment_id)
 
 
-def student_console(request):
+def student_console(request, student_id):
     context = {
-        'courses': Course.objects.all()
+       'courses': Course.objects.all()
     }
     template = loader.get_template('submitsys/student.html')
-    return HttpResponse(template.render(context.request))
+    return HttpResponse(template.render(context, request))
+    # response_str = "Hello student " + str(student_id)
+    # return HttpResponse(response_str)
 
+
+def student_courses(request, student_id, course_id):
+    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(course_id)
+    return HttpResponse(response_str)
+
+
+def assignment_submissions(request, student_id, course_id, assignment_id):
+    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(course_id) + " and assignment " + str(assignment_id)
+    return HttpResponse(response_str)
+
+
+def course_enroll(request, course_id):
+    return HttpResponse("You're trying to enroll in course %s." % course_id)
+
+
+def enroll_status(request, course_id):
+    return HttpResponse("We are assessing the status of your enrollment in course %s." % course_id)
