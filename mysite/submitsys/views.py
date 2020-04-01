@@ -6,7 +6,8 @@ from .models import Assignment, Course, Student
 
 
 def index(request):
-    return HttpResponse("Welcome to the UMBC CMSC Submit System!")
+    template = loader.get_template("submitsys/index.html")
+    return HttpResponse(template.render({}, request))
 
 
 def course_console(request):
