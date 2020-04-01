@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-from .models import Assignment, Course
+from .models import Assignment, Course, Student
 
 
 def index(request):
@@ -54,7 +54,8 @@ def detail(request, assignment_id):
 
 def student_console(request, student_id):
     context = {
-       'courses': Course.objects.all()
+        'student': Student.objects.get(pk=student_id),
+        'courses': Course.objects.all()
     }
     template = loader.get_template('submitsys/student.html')
     return HttpResponse(template.render(context, request))
@@ -68,7 +69,8 @@ def student_courses(request, student_id, course_id):
 
 
 def assignment_submissions(request, student_id, course_id, assignment_id):
-    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(course_id) + " and assignment " + str(assignment_id)
+    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(
+        course_id) + " and assignment " + str(assignment_id)
     return HttpResponse(response_str)
 
 
