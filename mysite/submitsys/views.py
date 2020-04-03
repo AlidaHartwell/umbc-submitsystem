@@ -53,6 +53,11 @@ def detail(request, assignment_id):
     return HttpResponse("You're looking at assignment %s." % assignment_id)
 
 
+def student_intro(request):
+    template = loader. get_template('submitsys/studentintro.html')
+    return HttpResponse(template.render({}, request))
+
+
 def student_console(request, student_id):
     context = {
         'student': Student.objects.get(pk=student_id),
@@ -76,8 +81,8 @@ def assignment_submissions(request, student_id, course_id, assignment_id):
 
 
 def course_enroll(request, course_id):
-    return HttpResponse("You're trying to enroll in course %s." % course_id)
+    return HttpResponse("You're trying to enroll students in course %s." % course_id)
 
 
 def enroll_status(request, course_id):
-    return HttpResponse("We are assessing the status of your enrollment in course %s." % course_id)
+    return HttpResponse("We are assessing the status of enrollment in course %s." % course_id)

@@ -1,1 +1,25 @@
-<img src="https://www.umbc.edu/img/UMBC-color.svg">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The course console</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+<div>
+    <div class="container">
+        <img src="https://www.umbc.edu/img/UMBC-color.svg">
+        Welcome to the UMBC submit system!
+    </div>
+    <div class="container">
+        Are you a student or an instructor?
+    </div>
+    <div class="container">
+        <a class="btn btn-primary" href="{% url 'student_intro' %}" role="button">Student</a>
+        <a class="btn btn-secondary" href="#" role="button">Instructor</a>
+    </div>
+</div>
+</body>
+</html>
