@@ -10,6 +10,7 @@
 <body>
 <form action="{% url 'assignment_create' course_id %}" method="post">
     {% csrf_token %}
+    <div class="container">
     <div class=form-group">
         <label for="assignmentTitle">Assignment Title</label>
         <input type="text" class="form-control" id="assignmentTitle" name="assignmentTitle" placeholder="Enter new assigment title">
@@ -27,6 +28,7 @@
         <textarea class="form-control" id="requiredFiles" rows="3"></textarea>
     </div>
     <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
 </form>
 </body>
 </html>

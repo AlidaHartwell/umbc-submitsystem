@@ -10,7 +10,7 @@
 <body>
     <div class="container">
     <hr/>
-        <form action="{% url 'student_login' %}">
+        <form action="{% url 'student_login' %}" method="GET">
             <div class="form-group">
                 {% csrf_token %}
                 Hello! Please enter your ID number below.

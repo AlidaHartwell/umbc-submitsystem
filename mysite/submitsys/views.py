@@ -1,8 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
 
-from .models import Assignment, Course, Student
+from .models import Assignment, Course, Student, Submission
 
 
 def index(request):
@@ -25,8 +26,10 @@ def course_create(request):
 
 
 def assignment_console(request, course_id):
+    course: Course = get_object_or_404(Course, pk=course_id)
+
     context = {
-        "assignments": Assignment.objects.all(),  # TODO: Get all assignments for course ID
+        "assignments": Assignment.objects.filter(course_fk=course_id),
         "course_id": course_id,  # Get course object with course ID -> how do access model info from DB
     }
     template = loader.get_template('submitsys/assignment.html')
@@ -59,13 +62,13 @@ def student_intro(request):
 
 
 def student_login(request):
-    return HttpResponseRedirect(reverse('student_console', None, 'student_id')) #student_console(request, student_id=request.GET('student_id'))))
+    return HttpResponseRedirect(reverse('student_console', args=(request.GET['student_id'],)))
 
 
 def student_console(request, student_id):
     context = {
         'student': Student.objects.get(pk=student_id),
-        'courses': Course.objects.all()
+        'courses': Course.objects.all()  # TODO: Only get courses student is enrolled in, many to many field
     }
     template = loader.get_template('submitsys/student.html')
     return HttpResponse(template.render(context, request))
@@ -74,14 +77,41 @@ def student_console(request, student_id):
 
 
 def student_courses(request, student_id, course_id):
-    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(course_id)
-    return HttpResponse(response_str)
+    context = {
+        'student': Student.objects.get(pk=student_id),
+        'course': Course.objects.get(pk=course_id),
+        'assignments': Assignment.objects.filter(course_fk=course_id)
+    }
+    template = loader.get_template('submitsys/student_courses.html')
+    return HttpResponse(template.render(context, request))
 
 
-def assignment_submissions(request, student_id, course_id, assignment_id):
-    response_str = "Hello student " + str(student_id) + "! You are viewing course " + str(
-        course_id) + " and assignment " + str(assignment_id)
-    return HttpResponse(response_str)
+def submission_edit(request, student_id, course_id, assignment_id):
+
+    student = Student.objects.get(pk=student_id)
+    assignment = Assignment.objects.get(pk=assignment_id)
+
+    try:
+        submission = Submission.objects.get(student=student_id, assignment_fk=assignment_id)
+    except Submission.DoesNotExist:
+        submission = Submission.objects.create(student=student, assignment_fk=assignment, file_name='hw.py')
+
+    context = {
+        'student': student,
+        'course': Course.objects.get(pk=course_id),
+        'assignment': assignment,
+        'submission': submission
+    }
+
+    template = loader.get_template('submitsys/submission_edit.html')
+    return HttpResponse(template.render(context, request))
+
+
+def submission_save(request, student_id, course_id, assignment_id, submission_id):
+    submission = Submission.objects.get(pk=submission_id)
+    submission.file_name = request.POST['filename']
+    submission.save()
+    return HttpResponseRedirect(reverse('submission_edit', args=[student_id, course_id, assignment_id]))
 
 
 def course_enroll(request, course_id):
