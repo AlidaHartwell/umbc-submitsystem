@@ -10,12 +10,12 @@
 <body>
     <div class="container">
     <hr/>
-        <form action="">
+        <form action="{% url 'student_login' %}">
             <div class="form-group">
                 {% csrf_token %}
                 Hello! Please enter your ID number below.
                 <input type="textarea" class='form-control' name="student_id" placeholder="Student ID number" value=""/>
-                <a class="btn btn-primary" href="#" role="button">Confirm</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>

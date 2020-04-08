@@ -58,6 +58,10 @@ def student_intro(request):
     return HttpResponse(template.render({}, request))
 
 
+def student_login(request):
+    return HttpResponseRedirect(reverse('student_console', None, 'student_id')) #student_console(request, student_id=request.GET('student_id'))))
+
+
 def student_console(request, student_id):
     context = {
         'student': Student.objects.get(pk=student_id),
