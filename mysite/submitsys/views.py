@@ -30,7 +30,7 @@ def assignment_console(request, course_id):
 
     context = {
         "assignments": Assignment.objects.filter(course_fk=course_id),
-        "course_id": course_id,  # Get course object with course ID -> how do access model info from DB
+        "course_id": course_id,
     }
     template = loader.get_template('submitsys/assignment.html')
     return HttpResponse(template.render(context, request))
