@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
 
-from .models import Assignment, Course, Student, Submission
+from .models import Assignment, Course, Student, Submission, SubmissionFile
 
 
 def index(request):
@@ -76,13 +76,13 @@ def student_console(request, student_id):
     # return HttpResponse(response_str)
 
 
-def student_courses(request, student_id, course_id):
+def student_assignments(request, student_id, course_id):
     context = {
         'student': Student.objects.get(pk=student_id),
         'course': Course.objects.get(pk=course_id),
         'assignments': Assignment.objects.filter(course_fk=course_id)
     }
-    template = loader.get_template('submitsys/student_courses.html')
+    template = loader.get_template('submitsys/student_assignments.html')
     return HttpResponse(template.render(context, request))
 
 
@@ -92,15 +92,21 @@ def submission_edit(request, student_id, course_id, assignment_id):
     assignment = Assignment.objects.get(pk=assignment_id)
 
     try:
-        submission = Submission.objects.get(student=student_id, assignment_fk=assignment_id)
+        submission = Submission.objects.get(student_fk=student_id, assignment_fk=assignment_id)
     except Submission.DoesNotExist:
-        submission = Submission.objects.create(student=student, assignment_fk=assignment, file_name='hw.py')
+        submission = Submission.objects.create(student_fk=student, assignment_fk=assignment)
+
+    try:
+        file = SubmissionFile.objects.get(submission_fk=submission.id)
+    except SubmissionFile.DoesNotExist:
+        file = SubmissionFile.objects.create(submission_fk=submission.id, file_name='examplefilename.txt')
 
     context = {
         'student': student,
         'course': Course.objects.get(pk=course_id),
         'assignment': assignment,
-        'submission': submission
+        'submission': submission,
+        'file': file
     }
 
     template = loader.get_template('submitsys/submission_edit.html')
@@ -109,8 +115,16 @@ def submission_edit(request, student_id, course_id, assignment_id):
 
 def submission_save(request, student_id, course_id, assignment_id, submission_id):
     submission = Submission.objects.get(pk=submission_id)
-    submission.file_name = request.POST['filename']
-    submission.save()
+    file = SubmissionFile.objects.filter(submission_fk=submission_id)
+
+    if len(file) == 0:  # This shouldn't ever happen, right? (line102)
+        file = SubmissionFile.objects.create(submission_fk=submission, file_name='', file_contents='')
+    else:
+        file = file[0]
+
+    file.file_name = request.POST['filename']
+    file.file_contents = request.POST['filebody']
+    file.save()
     return HttpResponseRedirect(reverse('submission_edit', args=[student_id, course_id, assignment_id]))
 
 

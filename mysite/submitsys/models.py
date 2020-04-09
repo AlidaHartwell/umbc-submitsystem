@@ -3,13 +3,19 @@ from django.db import models
 
 # Create your models here.
 class Course(models.Model):
-    course_name = models.CharField(max_length=8, default='CMSC 201')
+    course_name = models.CharField(max_length=8, default='Course Name')
+
+    def __str__(self):
+        return self.course_name
 
 
 class Assignment(models.Model):
     assignment_name = models.CharField(max_length=15, default='HW0')
     course_fk = models.ForeignKey(Course, on_delete=models.CASCADE)
     point_value = models.IntegerField()
+
+    def __str__(self):
+        return self.assignment_name
 
 
 class Rubric(models.Model):
@@ -38,11 +44,15 @@ class Student(models.Model):
 
 
 class Submission(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    file_name = models.CharField(max_length=15)  # Directory of submissions
+    student_fk = models.ForeignKey(Student, on_delete=models.CASCADE)
     assignment_fk = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     mongo_db = models.CharField(max_length=512, default="NULL")
 
+
+class SubmissionFile(models.Model):
+    file_name = models.CharField(max_length=15, default="NULL")
+    file_contents = models.TextField(default="NULL")
+    submission_fk = models.ForeignKey(Submission, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.file_name
-

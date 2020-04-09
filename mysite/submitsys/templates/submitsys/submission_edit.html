@@ -14,7 +14,11 @@
         Edit your submission for assignment {{assignment.assignment_name}}
         <div class=form-group">
             <label for="filename">File Name</label>
-            <input type="text" class="form-control" id="filename" name="filename" placeholder="{{submission.file_name}}">
+            <input type="text" class="form-control" id="filename" name="filename" value="{{file.file_name}}">
+        </div>
+        <div class=form-group">
+            <label for="filebody">File Contents</label>
+            <textarea class="form-control" id="filebody" name="filebody" rows='5'>{{file.file_contents}}</textarea>
         </div>
         <button class="btn btn-primary" type="submit">Submit</button>
     </div>
