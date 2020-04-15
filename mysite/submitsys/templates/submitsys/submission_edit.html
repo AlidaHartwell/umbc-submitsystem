@@ -8,11 +8,15 @@
 
 </head>
 <body>
-<form action="{% url 'submission_save' student.id course.id assignment.id submission.id %}" method="post">
-    {% csrf_token %}
-    <div class="container">
-        Edit your submission for assignment {{assignment.assignment_name}}
+{% csrf_token %}
+<div class="container">
+    Edit your submission for assignment {{assignment.assignment_name}}
+    {% if files %}
+    {% for file in files %}
+    <form action="{% url 'submission_file_save' student.id course.id assignment.id submission.id %}" method="post">
+        {% csrf_token %}
         <div class=form-group">
+            <input type="hidden" name="id" value="{{file.id}}">
             <label for="filename">File Name</label>
             <input type="text" class="form-control" id="filename" name="filename" value="{{file.file_name}}">
         </div>
@@ -21,7 +25,21 @@
             <textarea class="form-control" id="filebody" name="filebody" rows='5'>{{file.file_contents}}</textarea>
         </div>
         <button class="btn btn-primary" type="submit">Submit</button>
-    </div>
-</form>
+    </form>
+    {% endfor %}
+    {% else %}
+    <br> To start a submission, upload a file below
+    {% endif %}
+</div>
+<div class="container">
+    <form action="{% url 'submission_file_create' student.id course.id assignment.id submission.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="fileUpload">Upload New File</label>
+            <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
 </body>
 </html>

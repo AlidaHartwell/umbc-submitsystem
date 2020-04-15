@@ -8,6 +8,7 @@
 
 </head>
 <body>
+<div class="container">
 <ul>
     {% for assignment in assignments %}
     <li>{{assignment.assignment_name}}</li>
@@ -17,5 +18,11 @@
     {% csrf_token %}
     <button class="btn btn-primary" type="submit">Create New Assignment</button>
 </form>
+<hr>
+<form action="{% url 'new_enrollment' course_id %}" method="post">
+    {% csrf_token %}
+    <button class="btn btn-primary" type="submit">Enroll New Students</button>
+</form>
+</div>
 </body>
 </html>

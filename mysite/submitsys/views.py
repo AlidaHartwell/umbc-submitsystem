@@ -1,3 +1,5 @@
+import csv
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import loader
@@ -66,9 +68,10 @@ def student_login(request):
 
 
 def student_console(request, student_id):
+    student = Student.objects.get(pk=student_id)
     context = {
-        'student': Student.objects.get(pk=student_id),
-        'courses': Course.objects.all()  # TODO: Only get courses student is enrolled in, many to many field
+        'student': student,
+        'courses': student.student_courses.all()
     }
     template = loader.get_template('submitsys/student.html')
     return HttpResponse(template.render(context, request))
@@ -96,24 +99,21 @@ def submission_edit(request, student_id, course_id, assignment_id):
     except Submission.DoesNotExist:
         submission = Submission.objects.create(student_fk=student, assignment_fk=assignment)
 
-    try:
-        file = SubmissionFile.objects.get(submission_fk=submission.id)
-    except SubmissionFile.DoesNotExist:
-        file = SubmissionFile.objects.create(submission_fk=submission.id, file_name='examplefilename.txt')
+    files = SubmissionFile.objects.filter(submission_fk=submission.id)
 
     context = {
         'student': student,
         'course': Course.objects.get(pk=course_id),
         'assignment': assignment,
         'submission': submission,
-        'file': file
+        'files': files
     }
 
     template = loader.get_template('submitsys/submission_edit.html')
     return HttpResponse(template.render(context, request))
 
 
-def submission_save(request, student_id, course_id, assignment_id, submission_id):
+def submission_file_save(request, student_id, course_id, assignment_id, submission_id):
     submission = Submission.objects.get(pk=submission_id)
     file = SubmissionFile.objects.filter(submission_fk=submission_id)
 
@@ -128,9 +128,39 @@ def submission_save(request, student_id, course_id, assignment_id, submission_id
     return HttpResponseRedirect(reverse('submission_edit', args=[student_id, course_id, assignment_id]))
 
 
-def course_enroll(request, course_id):
-    return HttpResponse("You're trying to enroll students in course %s." % course_id)
+def submission_file_create(request, student_id, course_id, assignment_id, submission_id):
+    submission = Submission.objects.get(pk=submission_id)
+    file = SubmissionFile(submission_fk=submission)
+
+    with open(request.POST['fileUpload']) as f:
+        file.file_contents = f.read()
+        file.file_name = request.POST['fileUpload']
+
+    file.save()
+    return HttpResponseRedirect(reverse('submission_edit', args=[student_id, course_id, assignment_id]))
 
 
-def enroll_status(request, course_id):
-    return HttpResponse("We are assessing the status of enrollment in course %s." % course_id)
+def new_enrollment(request, course_id):
+    # return HttpResponse("You're trying to enroll students in course %s." % course_id)
+
+    context = {
+        'course': Course.objects.get(pk=course_id)
+    }
+    template = loader.get_template('submitsys/new_enrollment.html')
+    return HttpResponse(template.render(context, request))
+
+
+def course_enrollment(request, course_id):
+
+    with open(request.POST['student_upload']) as file:
+        reader = csv.reader(file)
+        for row in reader:
+            student, created = Student.objects.get_or_create(
+                student_num=row[0],
+                student_email=row[1]
+            )
+            student.save()
+            student.student_courses.add(Course.objects.get(pk=course_id))
+    return HttpResponseRedirect(reverse("new_enrollment", args=[course_id]))
+
+

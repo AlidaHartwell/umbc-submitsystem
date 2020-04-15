@@ -38,6 +38,7 @@ class RubricItem(models.Model):
 class Student(models.Model):
     student_num = models.CharField(max_length=7, default='NULL')
     student_email = models.CharField(max_length=30)
+    student_courses = models.ManyToManyField(Course)
 
     def __str__(self):
         return self.student_num
@@ -50,7 +51,7 @@ class Submission(models.Model):
 
 
 class SubmissionFile(models.Model):
-    file_name = models.CharField(max_length=15, default="NULL")
+    file_name = models.CharField(max_length=80, default="NULL")
     file_contents = models.TextField(default="NULL")
     submission_fk = models.ForeignKey(Submission, on_delete=models.CASCADE)
 
