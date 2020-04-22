@@ -17,7 +17,7 @@ def course_console(request):
     context = {
         "courses": Course.objects.all(),
     }
-    template = loader.get_template('submitsys/course.html')
+    template = loader.get_template('submitsys/course_dashboard.html')
     return HttpResponse(template.render(context, request))
 
 
@@ -59,7 +59,7 @@ def detail(request, assignment_id):
 
 
 def student_intro(request):
-    template = loader. get_template('submitsys/studentintro.html')
+    template = loader.get_template('submitsys/studentintro.html')
     return HttpResponse(template.render({}, request))
 
 
@@ -73,7 +73,7 @@ def student_console(request, student_id):
         'student': student,
         'courses': student.student_courses.all()
     }
-    template = loader.get_template('submitsys/student.html')
+    template = loader.get_template('submitsys/student_console.html')
     return HttpResponse(template.render(context, request))
     # response_str = "Hello student " + str(student_id)
     # return HttpResponse(response_str)
@@ -90,7 +90,6 @@ def student_assignments(request, student_id, course_id):
 
 
 def submission_edit(request, student_id, course_id, assignment_id):
-
     student = Student.objects.get(pk=student_id)
     assignment = Assignment.objects.get(pk=assignment_id)
 
@@ -116,15 +115,19 @@ def submission_edit(request, student_id, course_id, assignment_id):
 def submission_file_save(request, student_id, course_id, assignment_id, submission_id):
     submission = Submission.objects.get(pk=submission_id)
     file = SubmissionFile.objects.filter(submission_fk=submission_id)
+    student = Student.objects.get(pk=student_id)
 
-    if len(file) == 0:  # This shouldn't ever happen, right? (line102)
-        file = SubmissionFile.objects.create(submission_fk=submission, file_name='', file_contents='')
-    else:
-        file = file[0]
+    if submission.student_fk == student:
 
-    file.file_name = request.POST['filename']
-    file.file_contents = request.POST['filebody']
-    file.save()
+        if len(file) == 0:
+            file = SubmissionFile.objects.create(submission_fk=submission, file_name='', file_contents='')
+        else:
+            file = file[0]
+
+        file.file_name = request.POST['filename']
+        file.file_contents = request.POST['filebody']
+        file.save()
+
     return HttpResponseRedirect(reverse('submission_edit', args=[student_id, course_id, assignment_id]))
 
 
@@ -141,7 +144,6 @@ def submission_file_create(request, student_id, course_id, assignment_id, submis
 
 
 def new_enrollment(request, course_id):
-    # return HttpResponse("You're trying to enroll students in course %s." % course_id)
 
     context = {
         'course': Course.objects.get(pk=course_id)
@@ -151,7 +153,6 @@ def new_enrollment(request, course_id):
 
 
 def course_enrollment(request, course_id):
-
     with open(request.POST['student_upload']) as file:
         reader = csv.reader(file)
         for row in reader:
@@ -163,4 +164,4 @@ def course_enrollment(request, course_id):
             student.student_courses.add(Course.objects.get(pk=course_id))
     return HttpResponseRedirect(reverse("new_enrollment", args=[course_id]))
 
-
+# TODO: Steal bootstrap dashboard and pricing pages for instructor and student pages
