@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 
 # Create your models here.
@@ -13,6 +14,7 @@ class Assignment(models.Model):
     assignment_name = models.CharField(max_length=15, default='HW0')
     course_fk = models.ForeignKey(Course, on_delete=models.CASCADE)
     point_value = models.IntegerField()
+    due_date = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(weeks=2))
 
     def __str__(self):
         return self.assignment_name
@@ -36,12 +38,14 @@ class RubricItem(models.Model):
 
 
 class Student(models.Model):
+    student_fname = models.TextField(default='NULL')
+    student_lname = models.TextField(default='NULL')
     student_num = models.CharField(max_length=7, default='NULL')
     student_email = models.CharField(max_length=30)
     student_courses = models.ManyToManyField(Course)
 
     def __str__(self):
-        return self.student_num
+        return self.student_fname + " " + self.student_lname
 
 
 class Submission(models.Model):

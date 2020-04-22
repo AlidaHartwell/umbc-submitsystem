@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
+from datetime import datetime, timezone
 
 from .models import Assignment, Course, Student, Submission, SubmissionFile
 
@@ -69,14 +70,22 @@ def student_login(request):
 
 def student_console(request, student_id):
     student = Student.objects.get(pk=student_id)
+    courses = student.student_courses.all()
+    assignments = []
+
+    for course in courses:  # TODO: This gathers all assignment names - we need to discriminate by course. i.e. only display the assignments for the specific course)
+        course_assignments = Assignment.objects.filter(course_fk=course.id)
+        for assignment in course_assignments:
+            if assignment.due_date > datetime.now(timezone.utc):
+                assignments.append(assignment)
+
     context = {
         'student': student,
-        'courses': student.student_courses.all()
+        'courses': courses,
+        'assignments': assignments
     }
     template = loader.get_template('submitsys/student_console.html')
     return HttpResponse(template.render(context, request))
-    # response_str = "Hello student " + str(student_id)
-    # return HttpResponse(response_str)
 
 
 def student_assignments(request, student_id, course_id):
