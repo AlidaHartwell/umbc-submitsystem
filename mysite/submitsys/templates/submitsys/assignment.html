@@ -1,28 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>The assignment console</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% extends "submitsys\\dashboard.html" %}
 
-</head>
-<body>
-<div class="container">
-<ul>
-    {% for assignment in assignments %}
-    <li>{{assignment.assignment_name}}</li>
-    {% endfor %}
-</ul>
-<form action="{% url 'assignment_form' course_id %}" method="post">
-    {% csrf_token %}
-    <button class="btn btn-primary" type="submit">Create New Assignment</button>
-</form>
-<hr>
-<form action="{% url 'new_enrollment' course_id %}" method="post">
-    {% csrf_token %}
-    <button class="btn btn-primary" type="submit">Enroll New Students</button>
-</form>
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <div class="container">
+        <div class="card-deck mb-3 text-center">
+            {% for assignment in assignments %}
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ assignment.assignment_name }}</h4>
+                </div>
+
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
+                        submissions</small></h1>
+
+
+                    <form action="#" method="get">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Create New Assignment</h4>
+                </div>
+
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
+                        submissions</small></h1>
+
+
+                    <form action="{% url 'assignment_form' course_id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Enroll New Students</h4>
+                </div>
+
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
+                        submissions</small></h1>
+
+
+                    <form action="{% url 'new_enrollment' course_id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
+{% endblock%}

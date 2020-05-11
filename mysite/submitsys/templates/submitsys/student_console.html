@@ -49,7 +49,7 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title"> <small class="text-muted">Upcoming Assignments:</small></h1>
                 <ul class="list-unstyled mt-3 mb-4">
-                {% for assignment in assignments %}
+                {% for assignment in course.assignment_set.all %}
                     <li>{{assignment.assignment_name}}</li>
                 {% endfor %}
                 </ul>

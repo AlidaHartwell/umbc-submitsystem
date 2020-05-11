@@ -15,8 +15,19 @@ def index(request):
 
 
 def course_console(request):
+
+    courses = Course.objects.all()
+    assignments = []
+
+    for course in courses:
+        course_assignments = Assignment.objects.filter(course_fk=course.id)
+        for assignment in course_assignments:
+            if assignment.due_date > datetime.now(timezone.utc):
+                assignments.append(assignment)
+
     context = {
-        "courses": Course.objects.all(),
+        "courses": courses,
+        "assignments": assignments,
     }
     template = loader.get_template('submitsys/course_dashboard.html')
     return HttpResponse(template.render(context, request))
@@ -28,7 +39,7 @@ def course_create(request):
     return HttpResponseRedirect(reverse('course_console'))
 
 
-def assignment_console(request, course_id):
+def assignment_console(request, course_id): # TODO: Link to a new view with all submissions
     course: Course = get_object_or_404(Course, pk=course_id)
 
     context = {
@@ -73,7 +84,7 @@ def student_console(request, student_id):
     courses = student.student_courses.all()
     assignments = []
 
-    for course in courses:  # TODO: This gathers all assignment names - we need to discriminate by course. i.e. only display the assignments for the specific course)
+    for course in courses:
         course_assignments = Assignment.objects.filter(course_fk=course.id)
         for assignment in course_assignments:
             if assignment.due_date > datetime.now(timezone.utc):
@@ -173,4 +184,3 @@ def course_enrollment(request, course_id):
             student.student_courses.add(Course.objects.get(pk=course_id))
     return HttpResponseRedirect(reverse("new_enrollment", args=[course_id]))
 
-# TODO: Steal bootstrap dashboard and pricing pages for instructor and student pages
