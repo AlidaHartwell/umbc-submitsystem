@@ -2,64 +2,81 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-    <div class="container">
-        <div class="card-deck mb-3 text-center">
-            {% for assignment in assignments %}
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ assignment.assignment_name }}</h4>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <div class="container">
+            <div class="card-deck mb-3 text-center">
+                {% for assignment in assignments %}
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ assignment.assignment_name }}</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
+                                submissions</small></h1>
+
+
+                            <form action="#" method="get">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Create New Assignment</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <h3 class="card-title pricing-card-title"><small class="text-muted">
+                            Create a new assignment
+                        </small></h3>
+
+
+                        <form action="{% url 'assignment_create' course_id %}" method="post">
+                            {% csrf_token %}
+
+                            <input type="text" class="form-control" placeholder="Enter new assignment name..." value=""
+                                   name="assignmentTitle"/>
+                            <br/>
+                            <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
-                        submissions</small></h1>
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Enroll New Students</h4>
+                    </div>
 
+                    <div class="card-body">
+                        <a href="{% url 'new_enrollment' course_id %}">
+                            <svg class="bi bi-plus-circle-fill" width="20px" height="20px" viewBox="0 0 16 16"
+                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M16 8A8 8 0 110 8a8 8 0 0116 0zM8.5 4a.5.5 0 00-1 0v3.5H4a.5.5 0 000 1h3.5V12a.5.5 0 001 0V8.5H12a.5.5 0 000-1H8.5V4z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                            Upload CSV
+                        </a>
+                        <hr/>
+                        <a href="{% url 'add_single_enrollment' course_id %}">
+                            <svg class="bi bi-plus-circle-fill" width="20px" height="20px" viewBox="0 0 16 16"
+                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M16 8A8 8 0 110 8a8 8 0 0116 0zM8.5 4a.5.5 0 00-1 0v3.5H4a.5.5 0 000 1h3.5V12a.5.5 0 001 0V8.5H12a.5.5 0 000-1H8.5V4z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                            Add single student
+                        </a>
 
-                    <form action="#" method="get">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
-                    </form>
+                    </div>
                 </div>
+
             </div>
-            {% endfor %}
-
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Create New Assignment</h4>
-                </div>
-
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
-                        submissions</small></h1>
-
-
-                    <form action="{% url 'assignment_form' course_id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Enroll New Students</h4>
-                </div>
-
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title"><small class="text-muted">Go to assignment
-                        submissions</small></h1>
-
-
-                    <form action="{% url 'new_enrollment' course_id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-lg btn-block btn-primary">Go!</button>
-                    </form>
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
 
-{% endblock%}
+{% endblock %}

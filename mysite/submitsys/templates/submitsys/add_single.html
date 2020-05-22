@@ -1,0 +1,28 @@
+{% extends "submitsys\\dashboard.html" %}
+
+{% block content %}
+
+    <form class="col-12" action="{% url 'save_single_enrollment' course.id %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                   placeholder="Enter student email" name="email">
+            <small id="emailHelp" class="form-text text-muted">We only accept umbc.edu email addresses.</small>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <div class="form-row">
+
+                <div class="col">
+                    <input class="form-control" type="text" id="firstname" name="firstname" placeholder="First name">
+                </div>
+                <div class="col">
+                    <input class="form-control" type="text" id="lastname" name="lastname" placeholder="Last name">
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+{% endblock %}

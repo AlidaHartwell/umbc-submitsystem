@@ -1,7 +1,7 @@
 import csv
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from django.urls import reverse
 from datetime import datetime, timezone
@@ -184,3 +184,17 @@ def course_enrollment(request, course_id):
             student.student_courses.add(Course.objects.get(pk=course_id))
     return HttpResponseRedirect(reverse("new_enrollment", args=[course_id]))
 
+
+def single_enrollment(request, course_id):
+    course: Course = get_object_or_404(Course, pk=course_id)
+    return render(request, 'submitsys/add_single.html', context={'course': course})
+
+def save_single_enrollment(request, course_id):
+    course: Course = get_object_or_404(Course, pk=course_id)
+    student: Student
+    student, created = Student.objects.get_or_create(student_email=request.POST['email'])
+    student.student_fname = request.POST['firstname']
+    student.student_lname = request.POST['lastname']
+    student.student_courses.add(course)
+    student.save()
+    return HttpResponseRedirect(reverse('assignment_console', args=[course_id]))
